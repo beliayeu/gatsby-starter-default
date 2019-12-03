@@ -1,6 +1,7 @@
 const pathUtil = require('path');
+const { updateStateAndRunQueries } = require('gatsby/dist/query/query-watcher');
 
-exports.createPages = async ({ graphql, actions }) => {
+exports.createPages = async ({ graphql, actions, traceId }) => {
   const { createPage } = actions
   const result = await graphql(`
     {
@@ -27,4 +28,8 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   });
+
+  if (traceId === 'createPages') {
+    await updateStateAndRunQueries(false, {});
+  }
 }
